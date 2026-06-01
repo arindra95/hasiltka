@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sistem Nilai Akademik SD</title>
-    <!-- Font Awesome untuk Ikon Vektor SVG edgeonereclaim.sdndurensawit13 reclaim-g4exp0av8giyepji9cuh4gq2gx5k6jud -->
+    <title>Hasil TKA SDN Duren Sawit 13 Pg</title>
+    <!-- Font Awesome untuk Ikon Vektor SVG -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         /* ========================================================
@@ -127,13 +127,80 @@
         .fill-kurang { background: #f87171; }
         
         /* ========================================================
-           5. KONTEN NILAIKU
+           5. STYLING COUNTDOWN TIMER
+        ======================================================== */
+        .countdown-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #1e3a8a;
+            text-align: center;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            background: rgba(59, 130, 246, 0.08);
+            border-radius: 16px;
+            padding: 12px;
+            border: 1px dashed rgba(59, 130, 246, 0.3);
+        }
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #fff;
+            padding: 6px 10px;
+            border-radius: 12px;
+            min-width: 55px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+        .countdown-number {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        .countdown-label {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        .countdown-sep {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--primary);
+            animation: pulseTimer 1s infinite alternate;
+        }
+        @keyframes pulseTimer {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        /* ========================================================
+           6. KONTEN NILAIKU
         ======================================================== */
         .search-wrapper { display: flex; flex-direction: column; gap: 12px; }
         .search-input { width: 100%; padding: 16px; border-radius: 16px; border: 2px solid rgba(0,0,0,0.1); background: rgba(255,255,255,0.6); font-size: 14px; font-weight: 600; outline: none; transition: all 0.3s; }
         .search-input:focus { border-color: var(--primary); background: #fff; }
-        .btn-search { background: var(--primary); color: #fff; border: none; padding: 16px; border-radius: 16px; font-size: 14px; font-weight: 700; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); cursor: pointer; }
+        .btn-search { background: var(--primary); color: #fff; border: none; padding: 16px; border-radius: 16px; font-size: 14px; font-weight: 700; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); cursor: pointer; transition: all 0.3s ease; display: flex; justify-content: center; align-items: center; gap: 8px; }
         
+        /* Style Tambahan saat Tombol Nonaktif (Disabled) */
+        .btn-search:disabled {
+            background: #a0aec0;
+            color: #e2e8f0;
+            cursor: not-allowed;
+            box-shadow: none;
+            opacity: 0.8;
+        }
+
         .loading-container { display: none; text-align: center; padding: 30px 0; }
         .spinner { border: 4px solid rgba(0,0,0,0.1); border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 16px auto; }
         .pulse-text { animation: pulse 1s infinite alternate; font-weight: 700; font-size: 13px; color: var(--primary); }
@@ -160,7 +227,7 @@
         .card-footer { margin-top: 16px; padding-top: 16px; border-top: 1px dashed rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 2; }
         
         /* ========================================================
-           6. KONTEN LIST DATA (TOMBOL EXCEL & TABEL)
+           7. KONTEN LIST DATA (TOMBOL EXCEL & TABEL)
         ======================================================== */
         .filter-group { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
         .btn-filter { background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.1); padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: 0.2s;}
@@ -177,7 +244,7 @@
         th { font-weight: 700; background: rgba(0,0,0,0.03); }
         
         /* ========================================================
-           7. ANIMASI KEYFRAMES
+           8. ANIMASI KEYFRAMES
         ======================================================== */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes spin { 100% { transform: rotate(360deg); } }
@@ -224,11 +291,36 @@
         <div id="page-nilaiku" class="page-content active">
             <div class="m3-glass">
                 <h2 class="page-title"><i class="fa-solid fa-envelope-open-text"></i> Amplop Nilai Pribadi</h2>
+                
+                <!-- BLOK TIMER COUNTDOWN -->
+                <div class="countdown-title" id="timerTitle">
+                    <i class="fa-solid fa-hourglass-half"></i> Menuju Pengumuman (Besok 08.00 WIB)
+                </div>
+                <div class="countdown-container">
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="hoursVal">00</span>
+                        <span class="countdown-label">Jam</span>
+                    </div>
+                    <div class="countdown-sep">:</div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="minsVal">00</span>
+                        <span class="countdown-label">Menit</span>
+                    </div>
+                    <div class="countdown-sep">:</div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="secsVal">00</span>
+                        <span class="countdown-label">Detik</span>
+                    </div>
+                </div>
+
                 <p style="font-size: 12px; text-align: center; margin-bottom: 20px; color: var(--text-muted);">Masukkan minimal 2 huruf nama panggilan atau nama lengkapmu.</p>
                 
                 <div class="search-wrapper">
                     <input type="text" id="searchInput" class="search-input" placeholder="Ketik nama siswa...">
-                    <button class="btn-search" onclick="bukaAmplop()"><i class="fa-solid fa-magnifying-glass"></i> Buka Amplop Nilai</button>
+                    <!-- Menambahkan ID pada Button untuk kontrol akses -->
+                    <button class="btn-search" id="btnBukaAmplop" onclick="bukaAmplop()">
+                        <i class="fa-solid fa-lock"></i> Amplop Terkunci
+                    </button>
                 </div>
 
                 <div class="loading-container" id="loadingState">
@@ -255,16 +347,16 @@
 
                 <div class="filter-group">
                     <button class="btn-filter active" onclick="filterData('Semua')">Semua Umum</button>
-                    <button class="btn-filter" onclick="filterData('6A')">Ranking 6A</button>
-                    <button class="btn-filter" onclick="filterData('6B')">Ranking 6B</button>
-                    <button class="btn-filter" onclick="filterData('6C')">Ranking 6C</button>
+                    <button class="btn-filter" onclick="filterData('6A')">6A</button>
+                    <button class="btn-filter" onclick="filterData('6B')">6B</button>
+                    <button class="btn-filter" onclick="filterData('6C')">6C</button>
                 </div>
 
                 <div class="table-responsive">
                     <table id="dataTable">
                         <thead>
                             <tr>
-                                <th>Rnk Global</th>
+                                <th>Rnk</th>
                                 <th>Nama Lengkap</th>
                                 <th>Rata-Rata</th>
                             </tr>
@@ -283,27 +375,25 @@
             <a href="#" class="nav-item active" onclick="switchPage('nilaiku', this)">
                 <i class="fa-solid fa-address-card"></i><span>Nilaiku</span>
             </a>
-            <a href="#" class="nav-item" onclick="switchPage('list', this)">
+            <!-- <a href="#" class="nav-item" onclick="switchPage('list', this)">
                 <i class="fa-solid fa-list-ol"></i><span>List Data</span>
-            </a>
+            </a> -->
         </div>
 
     </div>
 
     <!-- ================= LOGIKA JAVASCRIPT ================= -->
     <script>
-        // Array Raw Data Siswa
-        // Format [Nama, Kelas, Nilai MTK(opsional), Nilai B.Indo(opsional)]
         const rawNames = [
             ["ABDULLAH WALDAN ZAHIRUDDIN SINAMO", "6A", 50.00, 73.33],
             ["ADHWAA ALIIFAH KHORUNNISA", "6A", 30.00, 80.00],
-            ["ADINDA AISYAH", "6A", 66.67, 83.33],
+            ["ADINDA AISYAH", "6A", 58.00, 57.00],
             ["AHMAD FATHIN MUBARAK", "6A", 70.00, 83.33],
-            ["AQILA TRIANA QOLBI", "6A", 36.67, 36.67],
+            ["AQILA TRIANA QOLBI", "6A", 96.00, 97.00],
             ["DAFFA SHABRI ZAHID", "6A", 30.00, 56.67],
             ["DALILA SALSABILA", "6A", 56.67, 76.67],
             ["DIMAS RADITYA SAPUTRA", "6A", 43.33, 63.33],
-            ["INARA JOVITA KALEELA RIZKY", "6A", 63.33, 76.67],
+            ["INARA JOVITA KALEELA RIZKY", "6A", 48.00, 48.00],
             ["ISMAEL HANIYYA ROSYID", "6A", 46.67, 80.00],
             ["KELFIN ZULFI PUTRA", "6A", 36.67, 46.67],
             ["KEYLA KANIA RAHMAN", "6A", 83.33, 96.67],
@@ -316,9 +406,9 @@
             ["RAFFI SANDY RAMADHAN", "6A", 56.67, 83.33],
             ["RAINA AMBA PRANESTHY", "6A", 46.67, 83.33],
             ["RAYKHA HAFIAH", "6A", 56.67, 80.00],
-            ["RAYSHA HAFIAH", "6A", 70.00, 70.00],
+            ["RAYSHA HAFIAH", "6A", 55.00, 54.00],
             ["SALMAN ALFARIZI", "6A", 50.00, 50.00],
-            ["WAHYU MUHAMAD FADLAN", "6A", 66.67, 66.67],
+            ["WAHYU MUHAMAD FADLAN", "6A", 50.00, 49.00],
             ["WAHYU MUHAMAD FADLI", "6A", 63.33, 83.33],
 
             ["ABIDZAR AINUL HAKIM", "6B", 66.67, 86.67],
@@ -329,9 +419,9 @@
             ["ASIFAH NIMATUL MAULA", "6B", 46.67, 33.33],
             ["DAFA MAULANA", "6B", 43.33, 30.00],
             ["DHAFA BRYAN SYAHPUTRA", "6B", 53.33, 86.67],
-            ["FAILISHA ALMAIZA CALLISTA", "6B", 66.67, 83.33],
+            ["FAILISHA ALMAIZA CALLISTA", "6B", 99.00, 98.00],
             ["FAZILA YULIANTI", "6B", 53.33, 76.67],
-            ["HAFIDZAH NURHANIFAH AZMI ARMANI", "6B", 76.67, 90.00],
+            ["HAFIDZAH NURHANIFAH AZMI ARMANI", "6B", 56.00, 55.00],
             ["HAFIZAH INTAN PURNAMA", "6B", 70.00, 70.00],
             ["HENDRA MIE SAPUTRA", "6B", 33.33, 30.00],
             ["JANNATI ZAHRA", "6B", 36.67, 40.00],
@@ -344,19 +434,19 @@
             ["MUHAMMAD KHALIL", "6B", 70.00, 76.67],
             ["MUHAMMAD RIZQI", "6B", 26.67, 50.00],
             ["NAURAH AFIYAH", "6B", 46.67, 76.67],
-            ["RAIHANA YASMIN HUMAIRA RAHMAN", "6B", 53.33, 80.00],
+            ["RAIHANA YASMIN HUMAIRA RAHMAN", "6B", 96.00, 95.00],
             ["SALSABILA RESTIANI", "6B", 30.00, 70.00],
             ["SYAFINA OLIFIA TSABITHA", "6B", 60.00, 83.33],
-            ["VICA ARCILLA", "6B", 50.00, 73.33],
+            ["VICA ARCILLA", "6B", 98.00, 97.00],
 
             ["ACHIE HAWARI", "6C", 53.33, 60.00],
             ["ADHYASTHA AL- DAARY", "6C", 63.33, 73.33],
-            ["AFIFAH ISNAENI", "6C", 36.67, 76.67],
-            ["AHMAD AIDAN QURTHUBI", "6C", 53.33, 60.00],
+            ["AFIFAH ISNAENI", "6C", 96.00, 95.00],
+            ["AHMAD AIDAN QURTHUBI", "6C", 56.00, 57.00],
             ["ALIKA NAILA PUTRI", "6C", 33.33, 70.00],
-            ["ALISYA MUTIA ANGGRAENI", "6C", 63.33, 70.00],
+            ["ALISYA MUTIA ANGGRAENI", "6C", 54.00, 53.00],
             ["AQILA SALSABILA RAMADHANI", "6C", 53.33, 70.00],
-            ["DAFA MAULANA", "6C", 56.67, 66.67],
+            ["DAFA MAULANA", "6C", 97.00, 96.00],
             ["FARIZ ALZAM NAUFAL", "6C", 53.33, 73.33],
             ["FENY SYABANIA", "6C", 23.33, 43.33],
             ["HAFIZA KHAIRA LUBNA", "6C", 66.67, 70.00],
@@ -365,12 +455,12 @@
             ["ISMI ARFAIZZAH", "6C", 36.67, 86.67],
             ["JABBAARU PRASETIA", "6C", 46.67, 53.33],
             ["KHOIRUL BIMA ZAKY", "6C", 80.00, 63.33],
-            ["MUHAMMAD ALFARIZI AKBAR", "6C", 60.00, 73.33],
+            ["MUHAMMAD ALFARIZI AKBAR", "6C", 96.00, 97.00],
             ["MUHAMMAD HANNAN HIDAYAT LUBIS", "6C", 43.33, 70.00],
             ["MUHAMMAD MAHER ARKHAN", "6C", 46.67, 73.33],
             ["MUHAMMAD SAKHA IBADIL MURSYID", "6C", 56.67, 73.33],
             ["PRATAMA ABI SHAKRA", "6C", 46.67, 63.33],
-            ["RATU HUMAIROH", "6C", 50.00, 66.67],
+            ["RATU HUMAIROH", "6C", 93.00, 94.00],
             ["RISKI ADITIYA", "6C", 33.33, 56.67],
             ["SATRIO HAMID MUSYAFFA", "6C", 46.67, 83.33],
             ["SRI KUFFIYA KHOIRI GHINA HAQ", "6C", 53.33, 76.67],
@@ -378,7 +468,7 @@
             ["WAHYU NUR JAKA", "6C", 43.33, 66.67]
         ];
 
-        // Generator untuk mensimulasikan nilai realistis secara statis (fallback jika data tidak lengkap)
+        // Generator fallback pengaman
         function generateScore(name, offset) {
             let hash = 0;
             for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
@@ -388,7 +478,7 @@
         function getPredikatMtk(score) { return score >= 60 ? "Baik" : (score >= 35 ? "Memadai" : "Kurang"); }
         function getPredikatIndo(score) { return score >= 70 ? "Baik" : (score >= 45 ? "Memadai" : "Kurang"); }
 
-        // Membentuk Objek Data
+        // Membentuk Objek Data Master
         let students = rawNames.map(s => {
             let name = s[0].trim();
             let cls = s[1];
@@ -403,31 +493,80 @@
             };
         });
 
-        // ==========================================================
-        // LOGIKA PERINGKAT: MENGURUTKAN DARI TERTINGGI KE TERENDAH
-        // ==========================================================
-        
         // 1. Hitung Peringkat GLOBAL (Seluruh Siswa)
-        // Sort: Nilai Rata-rata Tertinggi -> Terendah. Jika sama, urutkan nama secara Abjad (Ascending)
         students.sort((a, b) => b.avg - a.avg || a.name.localeCompare(b.name));
         students.forEach((s, index) => {
             s.globalRank = index + 1;
         });
 
-        // 2. Hitung Peringkat KELAS (Khusus Per Kelas)
+        // 2. Hitung Peringkat KELAS (Shallow-copy direct assignment)
         ['6A', '6B', '6C'].forEach(cls => {
             let classStudents = students.filter(s => s.class === cls);
             classStudents.sort((a, b) => b.avg - a.avg || a.name.localeCompare(b.name));
             classStudents.forEach((cs, index) => {
-                // BUG FIXED: Karena cs adalah referensi langsung ke objek di dalam array students,
-                // kita bisa memodifikasinya secara langsung. Tidak butuh .find() untuk mencegah 
-                // error bentrok "Nama Kembar" antar kelas (seperti kasus "Dafa Maulana" 6B & 6C).
                 cs.classRank = index + 1;
             });
         });
 
-
         let currentFilter = 'Semua';
+
+        // ==========================================================
+        // LOGIKA TIMER COUNTDOWN (Target pukul 08:00 WIB)
+        // ==========================================================
+        function initCountdown() {
+            const hoursVal = document.getElementById('hoursVal');
+            const minsVal = document.getElementById('minsVal');
+            const secsVal = document.getElementById('secsVal');
+            const timerTitle = document.getElementById('timerTitle');
+            const btnBuka = document.getElementById('btnBukaAmplop');
+
+            function updateTimer() {
+                const now = new Date();
+                const nowUTC = now.getTime();
+
+                // 08:00 WIB setara dengan 01:00:00 UTC
+                let targetUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 1, 0, 0, 0);
+                
+                // Jika hari ini pukul 08:00 WIB sudah lewat, arahkan target ke besok pagi pukul 08:00 WIB
+                if (nowUTC >= targetUTC) {
+                    targetUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 1, 0, 0, 0);
+                }
+
+                const diff = targetUTC - nowUTC;
+
+                // Jika hitung mundur telah berakhir (00:00:00)
+                if (diff <= 0) {
+                    timerTitle.innerHTML = `<i class="fa-solid fa-circle-check" style="color: #10b981;"></i> Pengumuman Hasil Telah Dibuka!`;
+                    hoursVal.innerText = "00";
+                    minsVal.innerText = "00";
+                    secsVal.innerText = "00";
+                    
+                    // AKTIFKAN TOMBOL & UBAH STRUKTUR LAYOUT
+                    if (btnBuka) {
+                        btnBuka.removeAttribute('disabled');
+                        btnBuka.innerHTML = `<i class="fa-solid fa-envelope-open"></i> Buka Amplop Nilai`;
+                    }
+                    return;
+                }
+
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                hoursVal.innerText = String(hours).padStart(2, '0');
+                minsVal.innerText = String(minutes).padStart(2, '0');
+                secsVal.innerText = String(seconds).padStart(2, '0');
+
+                // NONAKTIFKAN TOMBOL SELAMA TIMER BERJALAN
+                if (btnBuka) {
+                    btnBuka.setAttribute('disabled', 'true');
+                    btnBuka.innerHTML = `<i class="fa-solid fa-lock"></i> Amplop Terkunci`;
+                }
+            }
+
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
 
         // ==========================================================
         // FUNGSI NAVIGASI DAN HALAMAN
@@ -547,10 +686,8 @@
             
             // Logika Penyaringan dan Pengurutan Berdasarkan Tipe Filter
             if (currentFilter === 'Semua') {
-                // Tampilkan semua data, urutkan berdasarkan Global Rank
                 filtered = [...students].sort((a, b) => a.globalRank - b.globalRank);
             } else {
-                // Tampilkan data per kelas, urutkan berdasarkan Class Rank
                 filtered = students.filter(s => s.class === currentFilter).sort((a, b) => a.classRank - b.classRank);
             }
             
@@ -620,7 +757,11 @@
             document.body.removeChild(link);
         }
 
-        window.onload = () => { renderStatistik(); renderTable(); };
+        window.onload = () => { 
+            renderStatistik(); 
+            renderTable(); 
+            initCountdown(); // Memulai timer saat load awal
+        };
     </script>
 </body>
 </html>

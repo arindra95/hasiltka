@@ -22,7 +22,6 @@
     <meta property="og:image:height" content="630">
     <meta property="og:type" content="website">
     
-    <!-- Penanda Verifikasi Pratinjau WhatsApp -->
     <link rel="image_src" href="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=600&h=315&q=80">
 
     <!-- Font Awesome untuk Ikon Vektor SVG -->
@@ -182,28 +181,10 @@
             min-width: 55px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.03);
         }
-        .countdown-number {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--primary);
-        }
-        .countdown-label {
-            font-size: 9px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-        .countdown-sep {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--primary);
-            animation: pulseTimer 1s infinite alternate;
-        }
-        @keyframes pulseTimer {
-            0% { opacity: 0.3; }
-            100% { opacity: 1; }
-        }
+        .countdown-number { font-size: 18px; font-weight: 800; color: var(--primary); }
+        .countdown-label { font-size: 9px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-top: 2px; }
+        .countdown-sep { font-size: 18px; font-weight: 800; color: var(--primary); animation: pulseTimer 1s infinite alternate; }
+        @keyframes pulseTimer { 0% { opacity: 0.3; } 100% { opacity: 1; } }
 
         /* ========================================================
            6. KONTEN NILAIKU
@@ -213,14 +194,7 @@
         .search-input:focus { border-color: var(--primary); background: #fff; }
         .btn-search { background: var(--primary); color: #fff; border: none; padding: 16px; border-radius: 16px; font-size: 14px; font-weight: 700; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); cursor: pointer; transition: all 0.3s ease; display: flex; justify-content: center; align-items: center; gap: 8px; }
         
-        /* Style Tambahan saat Tombol Nonaktif (Disabled) */
-        .btn-search:disabled {
-            background: #a0aec0;
-            color: #e2e8f0;
-            cursor: not-allowed;
-            box-shadow: none;
-            opacity: 0.8;
-        }
+        .btn-search:disabled { background: #a0aec0; color: #e2e8f0; cursor: not-allowed; box-shadow: none; opacity: 0.8; }
 
         .loading-container { display: none; text-align: center; padding: 30px 0; }
         .spinner { border: 4px solid rgba(0,0,0,0.1); border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 16px auto; }
@@ -273,12 +247,58 @@
         @keyframes shimmer { 100% { transform: translateX(100%) rotate(45deg); } }
         @keyframes bounceIn { 0% { transform: scale(0.5); opacity: 0; } 50% { transform: scale(1.05); opacity: 1; } 70% { transform: scale(0.95); } 100% { transform: scale(1); opacity: 1; } }
         .animate-bounce { animation: bounceIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+        /* ========================================================
+           9. MODAL VALIDASI NISN (KEAMANAN DATA)
+        ======================================================== */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px);
+            display: none; justify-content: center; align-items: center; z-index: 9999;
+            opacity: 0; transition: opacity 0.3s ease;
+            padding: 16px;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-box { 
+            width: 100%; max-width: 340px; background: white; 
+            padding: 24px; border-radius: 24px; 
+            transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2); text-align: center;
+        }
+        .modal-overlay.active .modal-box { transform: scale(1); }
+        .modal-input {
+            width: 100%; padding: 14px; border-radius: 12px; border: 2px solid rgba(0,0,0,0.1);
+            font-size: 14px; font-weight: 600; outline: none; margin-bottom: 16px; transition: border-color 0.3s;
+            text-align: center; letter-spacing: 2px;
+        }
+        .modal-input:focus { border-color: var(--primary); }
     </style>
 </head>
 <body>
 
     <div class="container-mobile">
         
+        <!-- ================= MODAL VALIDASI NISN ================= -->
+        <div id="nisnModal" class="modal-overlay">
+            <div class="modal-box">
+                <div style="font-size: 40px; color: var(--primary); margin-bottom: 10px;">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3 style="margin-bottom: 8px; color: var(--text-main); font-size: 18px; font-weight: 800;">Keamanan Data</h3>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5;">
+                    Untuk menjaga privasi, silakan masukkan <b>NISN</b> (Nomor Induk Siswa Nasional) yang terdaftar untuk membuka amplop ini.
+                </p>
+                <input type="number" id="nisnInput" class="modal-input" placeholder="Masukkan NISN...">
+                <div id="nisnError" style="color: #ef4444; font-size: 12px; margin-bottom: 16px; display: none; font-weight: 700;">
+                    <i class="fa-solid fa-circle-exclamation"></i> NISN tidak sesuai!
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-search" style="flex: 1; background: #f1f5f9; color: #64748b; box-shadow: none;" onclick="closeNisnModal()">Batal</button>
+                    <button class="btn-search" style="flex: 1; background: var(--primary);" onclick="verifyNisn()">Verifikasi</button>
+                </div>
+            </div>
+        </div>
+
         <!-- ================= HALAMAN 1: HOME ================= -->
         <div id="page-home" class="page-content">
             <div class="m3-glass">
@@ -315,9 +335,14 @@
                 
                 <!-- BLOK TIMER COUNTDOWN -->
                 <div class="countdown-title" id="timerTitle">
-                    <i class="fa-solid fa-hourglass-half"></i> Menuju Pengumuman (Besok 08.00 WIB)
+                    <i class="fa-solid fa-hourglass-half"></i> Menuju Pengumuman (02 Juni 2026, 08.00 WIB)
                 </div>
                 <div class="countdown-container">
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="daysVal">00</span>
+                        <span class="countdown-label">Hari</span>
+                    </div>
+                    <div class="countdown-sep">:</div>
                     <div class="countdown-item">
                         <span class="countdown-number" id="hoursVal">00</span>
                         <span class="countdown-label">Jam</span>
@@ -338,7 +363,9 @@
                 
                 <div class="search-wrapper">
                     <input type="text" id="searchInput" class="search-input" placeholder="Ketik nama siswa...">
-                    <button class="btn-search" onclick="bukaAmplop()"><i class="fa-solid fa-magnifying-glass"></i> Buka Amplop Nilai</button>
+                    <button class="btn-search" id="btnBukaAmplop" onclick="bukaAmplop()">
+                        <i class="fa-solid fa-lock"></i> Amplop Terkunci
+                    </button>
                 </div>
 
                 <div class="loading-container" id="loadingState">
@@ -346,8 +373,6 @@
                     <div class="pulse-text">Menyusun dokumen hasil...</div>
                 </div>
             </div>
-
-            <!-- Kontainer Hasil Pencarian -->
             <div id="resultContainer" class="result-container"></div>
         </div>
 
@@ -405,89 +430,92 @@
     <!-- ================= LOGIKA JAVASCRIPT ================= -->
     <script>
         const rawNames = [
-            // KELAS 6A (26 Siswa)
-            ["MUHAMMAD RISQI RAMADHAN AGUNG DEWA NDARU", "6A", 43.33, 43.33],
-            ["WAHYU MUHAMAD FADLI", "6A", 63.33, 83.33],
-            ["DIMAS RADITYA SAPUTRA", "6A", 43.33, 63.33],
-            ["MUHAMMAD ASHIL ALTHAF", "6A", 40.00, 76.67],
-            ["ABDULLAH WALDAN ZAHIRUDDIN SINAMO", "6A", 50.00, 73.33],
-            ["AQILA TRIANA QOLBI", "6A", 36.67, 36.67],
-            ["KELFIN ZULFI PUTRA", "6A", 36.67, 46.67],
-            ["RADEN ZUBAIR", "6A", 40.00, 60.00],
-            ["INARA JOVITA KALEELA RIZKY", "6A", 63.33, 76.67],
-            ["DALILA SALSABILA", "6A", 56.67, 76.67],
-            ["MUHAMAD ABDEL AL AKMAL", "6A", 46.67, 60.00],
-            ["RAYSHA HAFIAH", "6A", 70.00, 70.00],
-            ["SALMAN ALFARIZI", "6A", 50.00, 50.00],
-            ["AHMAD FATHIN MUBARAK", "6A", 70.00, 83.33],
-            ["MUHAMMAD IQBAL MUSHAFFA", "6A", 46.67, 76.67],
-            ["KEYLA KANIA RAHMAN", "6A", 83.33, 96.67],
-            ["ADHWAA ALIIFAH KHORUNNISA", "6A", 30.00, 80.00],
-            ["DAFFA SHABRI ZAHID", "6A", 30.00, 56.67],
-            ["RAFFI SANDY RAMADHAN", "6A", 56.67, 83.33],
-            ["ISMAEL HANIYYA ROSYID", "6A", 46.67, 80.00],
-            ["Nadia Putri Khalisya", "6A", 60.00, 80.00],
-            ["RAINA AMBA PRANESTHY", "6A", 46.67, 83.33],
-            ["RAYKHA HAFIAH", "6A", 56.67, 80.00],
-            ["WAHYU MUHAMAD FADLAN", "6A", 66.67, 66.67],
-            ["ADINDA AISYAH", "6A", 66.67, 83.33],
+           // FORMAT: ["NAMA", "KELAS", MTK, INDO, "NISN"]
+            
+            // KELAS 6A 
+            ["MUHAMMAD RISQI RAMADHAN AGUNG DEWA NDARU", "6A", 43.33, 43.33, "0137614145"],
+            ["WAHYU MUHAMAD FADLI", "6A", 63.33, 83.33, "0145526121"],
+            ["DIMAS RADITYA SAPUTRA", "6A", 43.33, 63.33, "0144892368"],
+            ["MUHAMMAD ASHIL ALTHAF", "6A", 40.00, 76.67, "3137919253"],
+            ["ABDULLAH WALDAN ZAHIRUDDIN SINAMO", "6A", 50.00, 73.33, "3135257749"],
+            ["AQILA TRIANA QOLBI", "6A", 36.67, 36.67, "3143967731"],
+            ["KELFIN ZULFI PUTRA", "6A", 36.67, 46.67, "0141960654"],
+            ["RADEN ZUBAIR", "6A", 40.00, 60.00, "0136535435"],
+            ["INARA JOVITA KALEELA RIZKY", "6A", 63.33, 76.67, "3143635843"],
+            ["DALILA SALSABILA", "6A", 56.67, 76.67, "3135298865"],
+            ["MUHAMAD ABDEL AL AKMAL", "6A", 46.67, 60.00, "0134164217"],
+            ["RAYSHA HAFIAH", "6A", 70.00, 70.00, "0137544716"],
+            ["SALMAN ALFARIZI", "6A", 50.00, 50.00, "0146820740"],
+            ["AHMAD FATHIN MUBARAK", "6A", 70.00, 83.33, "0131634922"],
+            ["MUHAMMAD IQBAL MUSHAFFA", "6A", 46.67, 76.67, "0147871845"],
+            ["KEYLA KANIA RAHMAN", "6A", 83.33, 96.67, "3134892136"],
+            ["ADHWAA ALIIFAH KHORUNNISA", "6A", 30.00, 80.00, "3139000434"],
+            ["DAFFA SHABRI ZAHID", "6A", 30.00, 56.67, "3137136825"],
+            ["RAFFI SANDY RAMADHAN", "6A", 56.67, 83.33, "3131160552"],
+            ["ISMAEL HANIYYA ROSYID", "6A", 46.67, 80.00, "0137211163"],
+            ["NADIA PUTRI KHALISYA", "6A", 60.00, 80.00, "0131935984"],
+            ["RAINA AMBA PRANESTHY", "6A", 46.67, 83.33, "0141335897"],
+            ["RAYKHA HAFIAH", "6A", 56.67, 80.00, "0138658498"],
+            ["WAHYU MUHAMAD FADLAN", "6A", 66.67, 66.67, "0143366895"],
+            ["ADINDA AISYAH", "6A", 66.67, 83.33, "3130525771"],
 
-            // KELAS 6B (27 Siswa)
-            ["ABIDZAR AINUL HAKIM", "6B", 66.67, 86.67],
-            ["ABIDZAR AL FARISY", "6B", 63.33, 86.67],
-            ["AFIFA FITIYA", "6B", 63.33, 80.00],
-            ["AHMAD ZAID AHSAN", "6B", 70.00, 80.00],
-            ["ANNISA HUMAIRAA RIFANA", "6B", 56.67, 83.33],
-            ["ASIFAH NI'MATUL MAULA", "6B", 46.67, 33.33],
-            ["DHAFA BRYAN SYAHPUTRA", "6B", 53.33, 86.67],
-            ["FAILISHA ALMAIZA CALLISTA", "6B", 66.67, 83.33],
-            ["FAZILA YULIANTI", "6B", 53.33, 76.67],
-            ["HAFIDZAH NURHANIFAH AZMI ARMANI", "6B", 76.67, 90.00],
-            ["HAFIZAH INTAN PURNAMA", "6B", 70.00, 70.00],
-            ["HENDRA MIE SAPUTRA", "6B", 33.33, 30.00],
-            ["JANNATI ZAHRA", "6B", 36.67, 40.00],
-            ["KEANU EVAN PRAMANA", "6B", 80.00, 86.67],
-            ["KHALFI RADITYO WIBOWO", "6B", 36.67, 56.67],
-            ["MAINANDA RUDYANA", "6B", 40.00, 76.67],
-            ["MOHAMAD FAISAL ALZAM", "6B", 60.00, 80.00],
-            ["MUHAMAD ZIDAN", "6B", 43.33, 76.67],
-            ["MUHAMMAD FADILLAH RAMADHAN", "6B", 30.00, 73.33],
-            ["MUHAMMAD KHALIL", "6B", 70.00, 76.67],
-            ["MUHAMMAD RIZQI", "6B", 26.67, 50.00],
-            ["NAURAH AFIYAH", "6B", 46.67, 76.67],
-            ["RAIHANA YASMIN HUMAIRA RAHMAN", "6B", 53.33, 80.00],
-            ["SALSABILA RESTIANI", "6B", 30.00, 70.00],
-            ["SYAFINA OLIFIA TSABITHA", "6B", 60.00, 83.33],
-            ["VICA ARCILLA", "6B", 50.00, 73.33],
+            // KELAS 6B
+            ["ABIDZAR AINUL HAKIM", "6B", 66.67, 86.67, "3139526106"],
+            ["ABIDZAR AL FARISY", "6B", 63.33, 86.67, "0148063695"],
+            ["AFIFA FITIYA", "6B", 63.33, 80.00, "3138395830"],
+            ["AHMAD ZAID AHSAN", "6B", 70.00, 80.00, "0131191753"],
+            ["ANNISA HUMAIRAA RIFANA", "6B", 56.67, 83.33, "0132521110"],
+            ["ASIFAH NIMATUL MAULA", "6B", 46.67, 33.33, "3131387734"],
+            ["DHAFA BRYAN SYAHPUTRA", "6B", 53.33, 86.67, "0142150873"],
+            ["DAFA MAULANA", "6B", 56.67, 66.67, "3130046513"],
+            ["FAILISHA ALMAIZA CALLISTA", "6B", 66.67, 83.33, "3143531569"],
+            ["FAZILA YULIANTI", "6B", 53.33, 76.67, "3133860274"],
+            ["HAFIDZAH NURHANIFAH AZMI ARMANI", "6B", 76.67, 90.00, "0139544859"],
+            ["HAFIZAH INTAN PURNAMA", "6B", 70.00, 70.00, "3130786121"],
+            ["HENDRA MIE SAPUTRA", "6B", 33.33, 30.00, "3134467216"],
+            ["JANNATI ZAHRA", "6B", 36.67, 40.00, "0142666522"],
+            ["KEANU EVAN PRAMANA", "6B", 80.00, 86.67, "0139407608"],
+            ["KHALFI RADITYO WIBOWO", "6B", 36.67, 56.67, "3143259370"],
+            ["MAINANDA RUDYANA", "6B", 40.00, 76.67, "0135073911"],
+            ["MOHAMAD FAISAL ALZAM", "6B", 60.00, 80.00, "3138629206"],
+            ["MUHAMAD ZIDAN", "6B", 43.33, 76.67, "3135969630"],
+            ["MUHAMMAD FADILLAH RAMADHAN", "6B", 30.00, 73.33, "3139548441"],
+            ["MUHAMMAD KHALIL", "6B", 70.00, 76.67, "0133394609"],
+            ["MUHAMMAD RIZQI", "6B", 26.67, 50.00, "3147686239"],
+            ["NAURAH AFIYAH", "6B", 46.67, 76.67, "0143221732"],
+            ["RAIHANA YASMIN HUMAIRA RAHMAN", "6B", 53.33, 80.00, "3139386796"],
+            ["SALSABILA RESTIANI", "6B", 30.00, 70.00, "3137354728"],
+            ["SYAFINA OLIFIA TSABITHA", "6B", 60.00, 83.33, "0144477729"],
+            ["VICA ARCILLA", "6B", 50.00, 73.33, "3133786308"],
 
-            // KELAS 6C (27 Siswa)
-            ["ACHIE HAWARI", "6C", 53.33, 60.00],
-            ["ADHYASTHA AL- DAARY", "6C", 63.33, 73.33],
-            ["AFIFAH ISNAENI", "6C", 36.67, 76.67],
-            ["AHMAD AIDAN QURTHUBI", "6C", 53.33, 60.00],
-            ["ALIKA NAILA PUTRI", "6C", 33.33, 70.00],
-            ["ALISYA MUTIA ANGGRAENI", "6C", 63.33, 70.00],
-            ["AQILA SALSABILA RAMADHANI", "6C", 53.33, 70.00],
-            ["DAFA MAULANA", "6C", 56.67, 66.67],
-            ["FARIZ ALZAM NAUFAL", "6C", 53.33, 73.33],
-            ["FENY SYABANIA", "6C", 23.33, 43.33],
-            ["HAFIZA KHAIRA LUBNA", "6C", 66.67, 70.00],
-            ["HUSNA SITI AISYAH", "6C", 26.67, 70.00],
-            ["IFFA ASTILA RAHMA", "6C", 50.00, 96.67],
-            ["ISMI ARFAIZZAH", "6C", 36.67, 86.67],
-            ["JABBAARU PRASETIA", "6C", 46.67, 53.33],
-            ["KHOIRUL BIMA ZAKY", "6C", 80.00, 63.33],
-            ["MUHAMMAD ALFARIZI AKBAR", "6C", 60.00, 73.33],
-            ["MUHAMMAD HANNAN HIDAYAT LUBIS", "6C", 43.33, 70.00],
-            ["MUHAMMAD MAHER ARKHAN", "6C", 46.67, 73.33],
-            ["MUHAMMAD SAKHA IBADIL MURSYID", "6C", 56.67, 73.33],
-            ["PRATAMA ABI SHAKRA", "6C", 46.67, 63.33],
-            ["RATU HUMAIROH", "6C", 50.00, 66.67],
-            ["RISKI ADITIYA", "6C", 33.33, 56.67],
-            ["SATRIO HAMID MUSYAFFA", "6C", 46.67, 83.33],
-            ["SRI KUFFIYA KHOIRI GHINA HAQ", "6C", 53.33, 76.67],
-            ["SYIFA ATTUL FAJRIYAH", "6C", 36.67, 73.33],
-            ["WAHYU NUR JAKA", "6C", 43.33, 66.67]
+            // KELAS 6C
+            ["ACHIE HAWARI", "6C", 53.33, 60.00, "3131006376"],
+            ["ADHYASTHA AL- DAARY", "6C", 63.33, 73.33, "0145209223"],
+            ["AFIFAH ISNAENI", "6C", 36.67, 76.67, "3131518872"],
+            ["AHMAD AIDAN QURTHUBI", "6C",  53.33, 60.00, "3140451801"],
+            ["ALIKA NAILA PUTRI", "6C", 33.33, 70.00, "3128192184"],
+            ["ALISYA MUTIA ANGGRAENI", "6C", 63.33, 70.00, "3132104052"],
+            ["AQILA SALSABILA RAMADHANI", "6C", 53.33, 70.00, "3139739293"],
+            ["DAFA MAULANA", "6C", 43.33, 30.00, "3126520546"],
+            ["FARIZ ALZAM NAUFAL", "6C", 53.33, 73.33, "0136673108"],
+            ["FENY SYABANIA", "6C", 23.33, 43.33, "0138677217"],
+            ["HAFIZA KHAIRA LUBNA", "6C", 66.67, 70.00, "0135218806"],
+            ["HUSNA SITI AISYAH", "6C", 26.67, 70.00, "3121319764"],
+            ["IFFA ASTILA RAHMA", "6C", 50.00, 96.67, "3140391909"],
+            ["ISMI ARFAIZZAH", "6C", 36.67, 86.67, "3125462277"],
+            ["JABBAARU PRASETIA", "6C", 46.67, 53.33, "3146104971"],
+            ["KHOIRUL BIMA ZAKY", "6C", 80.00, 63.33, "0139611637"],
+            ["MUHAMMAD ALFARIZI AKBAR", "6C", 60.00, 73.33, "3134878341"],
+            ["MUHAMMAD HANNAN HIDAYAT LUBIS", "6C", 43.33, 70.00, "0131682776"],
+            ["MUHAMMAD MAHER ARKHAN", "6C", 46.67, 73.33, "0146567920"],
+            ["MUHAMMAD SAKHA IBADIL MURSYID", "6C", 56.67, 73.33, "0132960738"],
+            ["PRATAMA ABI SHAKRA", "6C", 46.67, 63.33, "0139280563"],
+            ["RATU HUMAIROH", "6C", 50.00, 66.67, "3134666401"],
+            ["RISKI ADITIYA", "6C", 33.33, 56.67, "3130550005"],
+            ["SATRIO HAMID MUSYAFFA", "6C", 46.67, 83.33, "3136942255"],
+            ["SRI KUFFIYA KHOIRI GHINA HAQ", "6C", 53.33, 76.67, "3141202899"],
+            ["SYIFA ATTUL FAJRIYAH", "6C", 36.67, 73.33, "3141611849"],
+            ["WAHYU NUR JAKA", "6C", 43.33, 66.67, "3140044776"]
         ];
 
         // Generator fallback pengaman
@@ -506,10 +534,12 @@
             let cls = s[1];
             let mtk = s[2] !== undefined ? s[2] : generateScore(name, 1);
             let indo = s[3] !== undefined ? s[3] : generateScore(name, 2);
+            // Menangkap parameter NISN (Index ke-4). Jika tidak ada diisi string acak default
+            let nisn = s[4] !== undefined ? String(s[4]).trim() : "123456789"; 
             let avg = parseFloat(((mtk + indo) / 2).toFixed(2));
             
             return {
-                name: name, class: cls, mtk: mtk, indo: indo, avg: avg,
+                name: name, class: cls, mtk: mtk, indo: indo, avg: avg, nisn: nisn,
                 predMtk: getPredikatMtk(mtk), predIndo: getPredikatIndo(indo),
                 globalRank: 0, classRank: 0
             };
@@ -520,8 +550,6 @@
         students.forEach((s, index) => {
             s.globalRank = index + 1;
         });
-
-        console.log(students);
 
         // 2. Hitung Peringkat KELAS (Shallow-copy direct assignment)
         ['6A', '6B', '6C'].forEach(cls => {
@@ -535,62 +563,63 @@
         let currentFilter = 'Semua';
 
         // ==========================================================
-        // LOGIKA TIMER COUNTDOWN (Target pukul 08:00 WIB)
+        // LOGIKA TIMER COUNTDOWN (Target: 02 Juni 2026, 08:00 WIB)
         // ==========================================================
-        // function initCountdown() {
-        //     const hoursVal = document.getElementById('hoursVal');
-        //     const minsVal = document.getElementById('minsVal');
-        //     const secsVal = document.getElementById('secsVal');
-        //     const timerTitle = document.getElementById('timerTitle');
-        //     const btnBuka = document.getElementById('btnBukaAmplop');
+        function initCountdown() {
+            const daysVal = document.getElementById('daysVal');
+            const hoursVal = document.getElementById('hoursVal');
+            const minsVal = document.getElementById('minsVal');
+            const secsVal = document.getElementById('secsVal');
+            const timerTitle = document.getElementById('timerTitle');
+            const btnBuka = document.getElementById('btnBukaAmplop');
 
-        //     function updateTimer() {
-        //         const now = new Date();
-        //         const nowUTC = now.getTime();
+            function updateTimer() {
+                const now = new Date();
+                const nowUTC = now.getTime();
 
-        //         // 08:00 WIB setara dengan 01:00:00 UTC
-        //         let targetUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 1, 0, 0, 0);
-                
-        //         // Jika hari ini pukul 08:00 WIB sudah lewat, arahkan target ke besok pagi pukul 08:00 WIB
-        //         if (nowUTC >= targetUTC) {
-        //             targetUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 1, 0, 0, 0);
-        //         }
+                // Target Spesifik: 2 Juni 2026, 08:00 WIB
+                // Catatan: Bulan dalam JavaScript dimulai dari 0 (Januari=0, ..., Juni=5)
+                // 08:00 WIB = 01:00 UTC
+                const targetUTC = Date.UTC(2026, 5, 2, 1, 0, 0, 0);
 
-        //         const diff = targetUTC - nowUTC;
+                const diff = targetUTC - nowUTC;
 
-        //         // Jika hitung mundur telah berakhir (00:00:00)
-        //         if (diff <= 0) {
-        //             timerTitle.innerHTML = `<i class="fa-solid fa-circle-check" style="color: #10b981;"></i> Pengumuman Hasil Telah Dibuka!`;
-        //             hoursVal.innerText = "00";
-        //             minsVal.innerText = "00";
-        //             secsVal.innerText = "00";
+                // Jika hitung mundur telah berakhir (00:00:00)
+                if (diff <= 0) {
+                    timerTitle.innerHTML = `<i class="fa-solid fa-circle-check" style="color: #10b981;"></i> Pengumuman Hasil Telah Dibuka!`;
+                    daysVal.innerText = "00";
+                    hoursVal.innerText = "00";
+                    minsVal.innerText = "00";
+                    secsVal.innerText = "00";
                     
-        //             // AKTIFKAN TOMBOL & UBAH STRUKTUR LAYOUT
-        //             if (btnBuka) {
-        //                 btnBuka.removeAttribute('disabled');
-        //                 btnBuka.innerHTML = `<i class="fa-solid fa-envelope-open"></i> Buka Amplop Nilai`;
-        //             }
-        //             return;
-        //         }
+                    // AKTIFKAN TOMBOL & UBAH STRUKTUR LAYOUT
+                    if (btnBuka) {
+                        btnBuka.removeAttribute('disabled');
+                        btnBuka.innerHTML = `<i class="fa-solid fa-envelope-open"></i> Buka Amplop Nilai`;
+                    }
+                    return;
+                }
 
-        //         const hours = Math.floor(diff / (1000 * 60 * 60));
-        //         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        //         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-        //         hoursVal.innerText = String(hours).padStart(2, '0');
-        //         minsVal.innerText = String(minutes).padStart(2, '0');
-        //         secsVal.innerText = String(seconds).padStart(2, '0');
+                daysVal.innerText = String(days).padStart(2, '0');
+                hoursVal.innerText = String(hours).padStart(2, '0');
+                minsVal.innerText = String(minutes).padStart(2, '0');
+                secsVal.innerText = String(seconds).padStart(2, '0');
 
-        //         // NONAKTIFKAN TOMBOL SELAMA TIMER BERJALAN
-        //         if (btnBuka) {
-        //             btnBuka.setAttribute('disabled', 'true');
-        //             btnBuka.innerHTML = `<i class="fa-solid fa-lock"></i> Amplop Terkunci`;
-        //         }
-        //     }
+                // NONAKTIFKAN TOMBOL SELAMA TIMER BERJALAN
+                if (btnBuka) {
+                    btnBuka.setAttribute('disabled', 'true');
+                    btnBuka.innerHTML = `<i class="fa-solid fa-lock"></i> Amplop Terkunci`;
+                }
+            }
 
-        //     updateTimer();
-        //     setInterval(updateTimer, 1000);
-        // }
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
 
         // ==========================================================
         // FUNGSI NAVIGASI DAN HALAMAN
@@ -631,56 +660,108 @@
             drawBars(mtkStats, 'chart-mtk'); drawBars(indoStats, 'chart-indo');
         }
 
+        // Variabel untuk menyimpan data sementara siswa yang ditemukan sebelum dicek NISN
+        let pendingMatches = [];
+
         function bukaAmplop() {
             const query = document.getElementById('searchInput').value.trim().toUpperCase();
             const resContainer = document.getElementById('resultContainer');
-            const loading = document.getElementById('loadingState');
             resContainer.innerHTML = ''; 
             
             if (query.length < 2) { alert("Mohon ketik minimal 2 huruf nama Anda."); return; }
+            
+            // Cek apakah ada siswa dengan nama yang dicari
+            const matches = students.filter(s => s.name.toUpperCase().includes(query));
+            
+            if (matches.length === 0) {
+                resContainer.innerHTML = `<div class="m3-glass" style="text-align:center; color: #ef4444; font-weight: bold;">Siswa tidak ditemukan. Periksa ejaan nama.</div>`;
+                return;
+            }
+            
+            // Simpan siswa yang ditemukan untuk divalidasi NISN-nya
+            pendingMatches = matches;
+            
+            // Tampilkan Modal Keamanan Data
+            document.getElementById('nisnInput').value = '';
+            document.getElementById('nisnError').style.display = 'none';
+            const modal = document.getElementById('nisnModal');
+            modal.style.display = 'flex';
+            
+            // Jeda sedikit untuk mentrigger transisi CSS
+            setTimeout(() => modal.classList.add('active'), 10);
+        }
+
+        function closeNisnModal() {
+            const modal = document.getElementById('nisnModal');
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.style.display = 'none';
+                pendingMatches = [];
+            }, 300);
+        }
+
+        function verifyNisn() {
+            const nisnInput = document.getElementById('nisnInput').value.trim();
+            const errorMsg = document.getElementById('nisnError');
+            
+            if (nisnInput === '') {
+                errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> NISN tidak boleh kosong!';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            // Validasi Logika: Cari diantara siswa yang DITEMUKAN, apakah NISN nya SAMA dengan yang diketik?
+            const verifiedStudent = pendingMatches.find(s => s.nisn === nisnInput);
+
+            if (verifiedStudent) {
+                closeNisnModal();
+                renderHasil(verifiedStudent);
+            } else {
+                errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> NISN salah atau tidak cocok!';
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        function renderHasil(s) {
+            const resContainer = document.getElementById('resultContainer');
+            const loading = document.getElementById('loadingState');
+            
             loading.style.display = 'block';
             
             setTimeout(() => {
                 loading.style.display = 'none';
-                const matches = students.filter(s => s.name.toUpperCase().includes(query));
-                if (matches.length === 0) {
-                    resContainer.innerHTML = `<div class="m3-glass" style="text-align:center; color: #ef4444; font-weight: bold;">Siswa tidak ditemukan.</div>`;
-                    return;
-                }
                 
-                matches.forEach((s) => {
-                    let cardClass = s.globalRank === 1 ? 'rank-1' : (s.globalRank === 2 ? 'rank-2' : (s.globalRank === 3 ? 'rank-3' : 'rank-other'));
-                    let badgeIcon = s.globalRank === 1 ? '<i class="fa-solid fa-trophy" style="color:#fbbf24; font-size:20px;"></i>' : 
-                                   (s.globalRank <= 3 ? '<i class="fa-solid fa-medal" style="color:#f59e0b; font-size:20px;"></i>' : '<i class="fa-solid fa-hashtag" style="font-size:16px;"></i>');
-                    
-                    resContainer.insertAdjacentHTML('beforeend', `
-                        <div class="result-card animate-bounce ${cardClass}">
-                            <div class="card-header">
-                                <div style="flex: 1; padding-right: 10px;">
-                                    <div class="student-name">${s.name}</div>
-                                    <div class="student-class">Kelas ${s.class}</div>
-                                </div>
-                                <div class="rank-badge">
-                                    ${badgeIcon} 
-                                    <div style="font-size: 14px;">Umum: <b>#${s.globalRank}</b></div>
-                                    <div style="font-size: 11px; font-weight: 600; color: #555;">Kelas: #${s.classRank}</div>
-                                </div>
+                let cardClass = s.globalRank === 1 ? 'rank-1' : (s.globalRank === 2 ? 'rank-2' : (s.globalRank === 3 ? 'rank-3' : 'rank-other'));
+                let badgeIcon = s.globalRank === 1 ? '<i class="fa-solid fa-trophy" style="color:#fbbf24; font-size:20px;"></i>' : 
+                               (s.globalRank <= 3 ? '<i class="fa-solid fa-medal" style="color:#f59e0b; font-size:20px;"></i>' : '<i class="fa-solid fa-hashtag" style="font-size:16px;"></i>');
+                
+                resContainer.innerHTML = `
+                    <div class="result-card animate-bounce ${cardClass}">
+                        <div class="card-header">
+                            <div style="flex: 1; padding-right: 10px;">
+                                <div class="student-name">${s.name}</div>
+                                <div class="student-class">Kelas ${s.class} | NISN: ${s.nisn}</div>
                             </div>
-                            <div class="subject-row">
-                                <div class="subj-info"><span class="subj-name">Matematika</span><span class="subj-pred">${s.predMtk}</span></div>
-                                <div class="subj-score">${s.mtk.toFixed(2)}</div>
-                            </div>
-                            <div class="subject-row">
-                                <div class="subj-info"><span class="subj-name">Bahasa Indonesia</span><span class="subj-pred">${s.predIndo}</span></div>
-                                <div class="subj-score">${s.indo.toFixed(2)}</div>
-                            </div>
-                            <div class="card-footer">
-                                <span style="font-size: 13px; font-weight: 700;">Rata-Rata Ujian</span>
-                                <span style="font-size: 18px; font-weight: 900; color: var(--primary);">${s.avg.toFixed(2)}</span>
+                            <div class="rank-badge">
+                                ${badgeIcon} 
+                                <div style="font-size: 14px;">Umum: <b>#${s.globalRank}</b></div>
+                                <div style="font-size: 11px; font-weight: 600; color: #555;">Kelas: #${s.classRank}</div>
                             </div>
                         </div>
-                    `);
-                });
+                        <div class="subject-row">
+                            <div class="subj-info"><span class="subj-name">Matematika</span><span class="subj-pred">${s.predMtk}</span></div>
+                            <div class="subj-score">${s.mtk.toFixed(2)}</div>
+                        </div>
+                        <div class="subject-row">
+                            <div class="subj-info"><span class="subj-name">Bahasa Indonesia</span><span class="subj-pred">${s.predIndo}</span></div>
+                            <div class="subj-score">${s.indo.toFixed(2)}</div>
+                        </div>
+                        <div class="card-footer">
+                            <span style="font-size: 13px; font-weight: 700;">Rata-Rata Ujian</span>
+                            <span style="font-size: 18px; font-weight: 900; color: var(--primary);">${s.avg.toFixed(2)}</span>
+                        </div>
+                    </div>
+                `;
             }, 1200);
         }
 
@@ -784,7 +865,14 @@
         window.onload = () => { 
             renderStatistik(); 
             renderTable(); 
-            // initCountdown(); // Memulai timer saat load awal
+            initCountdown(); // Memulai timer saat load awal
+            
+            // Menambahkan pendengar "Enter Key" pada Modal Validasi NISN untuk kemudahan pengguna
+            document.getElementById('nisnInput').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    verifyNisn();
+                }
+            });
         };
     </script>
 </body>

@@ -534,60 +534,60 @@
         // ==========================================================
         // LOGIKA TIMER COUNTDOWN (Target pukul 08:00 WIB)
         // ==========================================================
-        function initCountdown() {
-            const hoursVal = document.getElementById('hoursVal');
-            const minsVal = document.getElementById('minsVal');
-            const secsVal = document.getElementById('secsVal');
-            const timerTitle = document.getElementById('timerTitle');
-            const btnBuka = document.getElementById('btnBukaAmplop');
+        // function initCountdown() {
+        //     const hoursVal = document.getElementById('hoursVal');
+        //     const minsVal = document.getElementById('minsVal');
+        //     const secsVal = document.getElementById('secsVal');
+        //     const timerTitle = document.getElementById('timerTitle');
+        //     const btnBuka = document.getElementById('btnBukaAmplop');
 
-            function updateTimer() {
-                const now = new Date();
-                const nowUTC = now.getTime();
+        //     function updateTimer() {
+        //         const now = new Date();
+        //         const nowUTC = now.getTime();
 
-                // 08:00 WIB setara dengan 01:00:00 UTC
-                let targetUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 1, 0, 0, 0);
+        //         // 08:00 WIB setara dengan 01:00:00 UTC
+        //         let targetUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 1, 0, 0, 0);
                 
-                // Jika hari ini pukul 08:00 WIB sudah lewat, arahkan target ke besok pagi pukul 08:00 WIB
-                if (nowUTC >= targetUTC) {
-                    targetUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 1, 0, 0, 0);
-                }
+        //         // Jika hari ini pukul 08:00 WIB sudah lewat, arahkan target ke besok pagi pukul 08:00 WIB
+        //         if (nowUTC >= targetUTC) {
+        //             targetUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 1, 0, 0, 0);
+        //         }
 
-                const diff = targetUTC - nowUTC;
+        //         const diff = targetUTC - nowUTC;
 
-                // Jika hitung mundur telah berakhir (00:00:00)
-                if (diff <= 0) {
-                    timerTitle.innerHTML = `<i class="fa-solid fa-circle-check" style="color: #10b981;"></i> Pengumuman Hasil Telah Dibuka!`;
-                    hoursVal.innerText = "00";
-                    minsVal.innerText = "00";
-                    secsVal.innerText = "00";
+        //         // Jika hitung mundur telah berakhir (00:00:00)
+        //         if (diff <= 0) {
+        //             timerTitle.innerHTML = `<i class="fa-solid fa-circle-check" style="color: #10b981;"></i> Pengumuman Hasil Telah Dibuka!`;
+        //             hoursVal.innerText = "00";
+        //             minsVal.innerText = "00";
+        //             secsVal.innerText = "00";
                     
-                    // AKTIFKAN TOMBOL & UBAH STRUKTUR LAYOUT
-                    if (btnBuka) {
-                        btnBuka.removeAttribute('disabled');
-                        btnBuka.innerHTML = `<i class="fa-solid fa-envelope-open"></i> Buka Amplop Nilai`;
-                    }
-                    return;
-                }
+        //             // AKTIFKAN TOMBOL & UBAH STRUKTUR LAYOUT
+        //             if (btnBuka) {
+        //                 btnBuka.removeAttribute('disabled');
+        //                 btnBuka.innerHTML = `<i class="fa-solid fa-envelope-open"></i> Buka Amplop Nilai`;
+        //             }
+        //             return;
+        //         }
 
-                const hours = Math.floor(diff / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        //         const hours = Math.floor(diff / (1000 * 60 * 60));
+        //         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        //         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-                hoursVal.innerText = String(hours).padStart(2, '0');
-                minsVal.innerText = String(minutes).padStart(2, '0');
-                secsVal.innerText = String(seconds).padStart(2, '0');
+        //         hoursVal.innerText = String(hours).padStart(2, '0');
+        //         minsVal.innerText = String(minutes).padStart(2, '0');
+        //         secsVal.innerText = String(seconds).padStart(2, '0');
 
-                // NONAKTIFKAN TOMBOL SELAMA TIMER BERJALAN
-                if (btnBuka) {
-                    btnBuka.setAttribute('disabled', 'true');
-                    btnBuka.innerHTML = `<i class="fa-solid fa-lock"></i> Amplop Terkunci`;
-                }
-            }
+        //         // NONAKTIFKAN TOMBOL SELAMA TIMER BERJALAN
+        //         if (btnBuka) {
+        //             btnBuka.setAttribute('disabled', 'true');
+        //             btnBuka.innerHTML = `<i class="fa-solid fa-lock"></i> Amplop Terkunci`;
+        //         }
+        //     }
 
-            updateTimer();
-            setInterval(updateTimer, 1000);
-        }
+        //     updateTimer();
+        //     setInterval(updateTimer, 1000);
+        // }
 
         // ==========================================================
         // FUNGSI NAVIGASI DAN HALAMAN

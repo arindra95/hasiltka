@@ -338,10 +338,7 @@
                 
                 <div class="search-wrapper">
                     <input type="text" id="searchInput" class="search-input" placeholder="Ketik nama siswa...">
-                    <!-- Menambahkan ID pada Button untuk kontrol akses -->
-                    <button class="btn-search" id="btnBukaAmplop" onclick="bukaAmplop()">
-                        <i class="fa-solid fa-magnifying-glass"> Amplop Terkunci
-                    </button>
+                    <button class="btn-search" onclick="bukaAmplop()"><i class="fa-solid fa-magnifying-glass"></i> Buka Amplop Nilai</button>
                 </div>
 
                 <div class="loading-container" id="loadingState">
@@ -349,6 +346,8 @@
                     <div class="pulse-text">Menyusun dokumen hasil...</div>
                 </div>
             </div>
+
+            <!-- Kontainer Hasil Pencarian -->
             <div id="resultContainer" class="result-container"></div>
         </div>
 

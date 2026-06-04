@@ -221,6 +221,35 @@
         .subj-score { font-size: 22px; font-weight: 900; color: #111; text-align: right; }
         .card-footer { margin-top: 16px; padding-top: 16px; border-top: 1px dashed rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 2; }
         
+        /* Tombol Print Hasil TKA */
+        .btn-print-hasil {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            padding: 14px;
+            margin-top: 16px;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: #fff;
+            border: none;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(30, 58, 138, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+        .btn-print-hasil:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 58, 138, 0.5);
+        }
+        .btn-print-hasil:active {
+            transform: translateY(0);
+        }
+        
         /* ========================================================
            7. KONTEN LIST DATA (TOMBOL EXCEL & TABEL)
         ======================================================== */
@@ -662,6 +691,7 @@
 
         // Variabel untuk menyimpan data sementara siswa yang ditemukan sebelum dicek NISN
         let pendingMatches = [];
+        let lastResult = null; // Menyimpan data siswa terakhir yang ditampilkan untuk fitur print
 
         function bukaAmplop() {
             const query = document.getElementById('searchInput').value.trim().toUpperCase();
@@ -725,6 +755,7 @@
         function renderHasil(s) {
             const resContainer = document.getElementById('resultContainer');
             const loading = document.getElementById('loadingState');
+            lastResult = s; // Simpan referensi data untuk fitur print
             
             loading.style.display = 'block';
             
@@ -760,6 +791,9 @@
                             <span style="font-size: 13px; font-weight: 700;">Rata-Rata Ujian</span>
                             <span style="font-size: 18px; font-weight: 900; color: var(--primary);">${s.avg.toFixed(2)}</span>
                         </div>
+                        <button class="btn-print-hasil" onclick="printHasilTKA(lastResult)">
+                            <i class="fa-solid fa-file-pdf"></i> Cetak Hasil TKA (PDF)
+                        </button>
                     </div>
                 `;
             }, 1200);
@@ -830,6 +864,354 @@
                 <script>window.onload=function(){window.print();}<\/script></body></html>
             `);
             cetakWindow.document.close();
+        }
+
+        // ==========================================================
+        // FUNGSI PRINT HASIL TKA DENGAN KOP SURAT RESMI (PDF)
+        // ==========================================================
+        function printHasilTKA(s) {
+            const today = new Date();
+            const tanggal = today.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Hasil TKA - ${s.name}</title>
+                    <style>
+                        @page {
+                            size: A4;
+                            margin: 20mm 15mm 20mm 15mm;
+                        }
+                        * {
+                            margin: 0;
+                            padding: 0;
+                            box-sizing: border-box;
+                            font-family: 'Times New Roman', Times, serif;
+                        }
+                        body {
+                            padding: 0;
+                            color: #000;
+                            font-size: 12pt;
+                            line-height: 1.6;
+                        }
+
+                        /* === KOP SURAT === */
+                        .kop-surat {
+                            display: flex;
+                            align-items: center;
+                            padding-bottom: 10px;
+                            border-bottom: 3px double #000;
+                            margin-bottom: 20px;
+                        }
+                        .kop-logo {
+                            width: 80px;
+                            height: 80px;
+                            margin-right: 15px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                        .kop-logo img {
+                            max-width: 100%;
+                            max-height: 100%;
+                        }
+                        .kop-logo-placeholder {
+                            width: 75px;
+                            height: 75px;
+                            border: 2px solid #000;
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 8pt;
+                            text-align: center;
+                            font-weight: bold;
+                        }
+                        .kop-text {
+                            text-align: center;
+                            flex: 1;
+                        }
+                        .kop-instansi {
+                            font-size: 11pt;
+                            font-weight: bold;
+                            text-transform: uppercase;
+                            letter-spacing: 1px;
+                        }
+                        .kop-sekolah {
+                            font-size: 16pt;
+                            font-weight: bold;
+                            text-transform: uppercase;
+                            letter-spacing: 2px;
+                            margin: 2px 0;
+                        }
+                        .kop-alamat {
+                            font-size: 10pt;
+                            font-style: italic;
+                        }
+                        .kop-kontak {
+                            font-size: 9pt;
+                        }
+
+                        /* === JUDUL SURAT === */
+                        .judul-surat {
+                            text-align: center;
+                            margin: 25px 0 20px 0;
+                        }
+                        .judul-surat h2 {
+                            font-size: 14pt;
+                            text-decoration: underline;
+                            text-transform: uppercase;
+                            letter-spacing: 2px;
+                            margin-bottom: 4px;
+                        }
+                        .judul-surat p {
+                            font-size: 11pt;
+                            color: #333;
+                        }
+
+                        /* === DATA SISWA === */
+                        .data-siswa {
+                            margin-bottom: 20px;
+                        }
+                        .data-siswa table {
+                            border-collapse: collapse;
+                            font-size: 12pt;
+                        }
+                        .data-siswa td {
+                            padding: 4px 8px;
+                            vertical-align: top;
+                        }
+                        .data-siswa td:first-child {
+                            width: 160px;
+                            font-weight: bold;
+                        }
+                        .data-siswa td:nth-child(2) {
+                            width: 15px;
+                            text-align: center;
+                        }
+
+                        /* === TABEL NILAI === */
+                        .tabel-nilai {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin: 15px 0 20px 0;
+                            font-size: 12pt;
+                        }
+                        .tabel-nilai th,
+                        .tabel-nilai td {
+                            border: 1px solid #000;
+                            padding: 10px 12px;
+                            text-align: center;
+                        }
+                        .tabel-nilai th {
+                            background-color: #f0f0f0;
+                            font-weight: bold;
+                        }
+                        .tabel-nilai .col-mapel {
+                            text-align: left;
+                        }
+                        .tabel-nilai .rata-rata {
+                            font-weight: bold;
+                            background-color: #f9f9f9;
+                        }
+
+                        /* === PERINGKAT === */
+                        .peringkat-box {
+                            border: 1px solid #000;
+                            padding: 12px 15px;
+                            margin: 15px 0;
+                            background: #fafafa;
+                        }
+                        .peringkat-box table {
+                            border-collapse: collapse;
+                            font-size: 12pt;
+                        }
+                        .peringkat-box td {
+                            padding: 3px 8px;
+                            vertical-align: top;
+                        }
+                        .peringkat-box td:first-child {
+                            width: 200px;
+                            font-weight: bold;
+                        }
+                        .peringkat-box td:nth-child(2) {
+                            width: 15px;
+                        }
+
+                        /* === TANDA TANGAN === */
+                        .ttd-section {
+                            margin-top: 40px;
+                            display: flex;
+                            justify-content: space-between;
+                        }
+                        .ttd-col {
+                            text-align: center;
+                            width: 45%;
+                        }
+                        .ttd-col .ttd-space {
+                            height: 70px;
+                        }
+                        .ttd-col .ttd-nama {
+                            font-weight: bold;
+                            text-decoration: underline;
+                        }
+                        .ttd-col .ttd-nip {
+                            font-size: 10pt;
+                        }
+
+                        /* === FOOTER CATATAN === */
+                        .footer-note {
+                            margin-top: 30px;
+                            padding-top: 10px;
+                            border-top: 1px solid #ccc;
+                            font-size: 9pt;
+                            color: #666;
+                            text-align: center;
+                            font-style: italic;
+                        }
+
+                        @media print {
+                            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <!-- KOP SURAT -->
+                    <div class="kop-surat">
+                        <div class="kop-logo">
+                            <div class="kop-logo-placeholder">LOGO<br>SDN</div>
+                        </div>
+                        <div class="kop-text">
+                            <div class="kop-instansi">Pemerintah Provinsi DKI Jakarta</div>
+                            <div class="kop-instansi">Dinas Pendidikan</div>
+                            <div class="kop-sekolah">SDN Duren Sawit 13 Pagi</div>
+                            <div class="kop-alamat">Jl. Duren Sawit Baru No. 2, Kel. Duren Sawit, Kec. Duren Sawit</div>
+                            <div class="kop-kontak">Jakarta Timur, DKI Jakarta 13440</div>
+                        </div>
+                        <div class="kop-logo" style="margin-right: 0; margin-left: 15px;">
+                            <div class="kop-logo-placeholder">TUT<br>WURI</div>
+                        </div>
+                    </div>
+
+                    <!-- JUDUL SURAT -->
+                    <div class="judul-surat">
+                        <h2>Laporan Hasil Tes Kemampuan Akademik (TKA)</h2>
+                        <p>Tahun Pelajaran 2025/2026</p>
+                    </div>
+
+                    <!-- DATA SISWA -->
+                    <div class="data-siswa">
+                        <table>
+                            <tr>
+                                <td>Nama Lengkap</td>
+                                <td>:</td>
+                                <td><b>${s.name}</b></td>
+                            </tr>
+                            <tr>
+                                <td>Kelas</td>
+                                <td>:</td>
+                                <td>${s.class}</td>
+                            </tr>
+                            <tr>
+                                <td>NISN</td>
+                                <td>:</td>
+                                <td>${s.nisn}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- PARAGRAF PENGANTAR -->
+                    <p style="text-align: justify; margin-bottom: 15px;">
+                        Berdasarkan hasil pelaksanaan Tes Kemampuan Akademik (TKA) yang telah dilaksanakan, 
+                        dengan ini kami sampaikan hasil perolehan nilai siswa tersebut di atas sebagai berikut:
+                    </p>
+
+                    <!-- TABEL NILAI -->
+                    <table class="tabel-nilai">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;">No</th>
+                                <th class="col-mapel">Mata Pelajaran</th>
+                                <th style="width: 100px;">Nilai</th>
+                                <th style="width: 100px;">Predikat</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td class="col-mapel">Matematika</td>
+                                <td><b>${s.mtk.toFixed(2)}</b></td>
+                                <td>${s.predMtk}</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td class="col-mapel">Bahasa Indonesia</td>
+                                <td><b>${s.indo.toFixed(2)}</b></td>
+                                <td>${s.predIndo}</td>
+                            </tr>
+                            <tr class="rata-rata">
+                                <td colspan="2" style="text-align: right; font-weight: bold;">Rata-Rata</td>
+                                <td><b>${s.avg.toFixed(2)}</b></td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- PERINGKAT -->
+                    <div class="peringkat-box">
+                        <table>
+                            <tr>
+                                <td>Peringkat Umum (Paralel)</td>
+                                <td>:</td>
+                                <td><b>${s.globalRank}</b> dari ${students.length} siswa</td>
+                            </tr>
+                            <tr>
+                                <td>Peringkat Kelas (${s.class})</td>
+                                <td>:</td>
+                                <td><b>${s.classRank}</b> dari ${students.filter(st => st.class === s.class).length} siswa</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- KETERANGAN PREDIKAT -->
+                    <p style="margin-top: 15px; font-size: 10pt;"><b>Keterangan Predikat:</b></p>
+                    <ul style="font-size: 10pt; margin-left: 20px; margin-bottom: 10px;">
+                        <li><b>Baik</b> — Matematika ≥ 60 | Bahasa Indonesia ≥ 70</li>
+                        <li><b>Memadai</b> — Matematika ≥ 35 | Bahasa Indonesia ≥ 45</li>
+                        <li><b>Kurang</b> — Dibawah batas Memadai</li>
+                    </ul>
+
+                    <!-- TANDA TANGAN -->
+                    <div class="ttd-section">
+                        <div class="ttd-col">
+                            <p>Mengetahui,</p>
+                            <p>Orang Tua/Wali Murid</p>
+                            <div class="ttd-space"></div>
+                            <p class="ttd-nama">_______________________</p>
+                        </div>
+                        <div class="ttd-col">
+                            <p>Jakarta, ${tanggal}</p>
+                            <p>Kepala Sekolah</p>
+                            <div class="ttd-space"></div>
+                            <p class="ttd-nama">_______________________</p>
+                            <p class="ttd-nip">NIP. ____________________</p>
+                        </div>
+                    </div>
+
+                    <!-- FOOTER -->
+                    <div class="footer-note">
+                        Dokumen ini dicetak secara otomatis oleh sistem. Surat ini sah tanpa tanda tangan basah.<br>
+                        &copy; ${today.getFullYear()} SDN Duren Sawit 13 Pagi — Sistem Informasi Akademik
+                    </div>
+
+                    <script>
+                        window.onload = function() { window.print(); };
+                    <\/script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
         }
 
         function exportExcel() {
